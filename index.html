@@ -5,53 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AME Legal CRM</title>
     <style>
-        :root {
-            --primary: #1e3a8a;
-            --secondary: #3b82f6;
-            --light: #f3f4f6;
-            --dark: #1f2937;
-            --danger: #ef4444;
-            --success: #10b981;
-        }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--light); margin: 0; color: var(--dark); }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        :root { --primary: #1e3a8a; --secondary: #3b82f6; --light: #f3f4f6; --dark: #1f2937; --danger: #ef4444; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--light); margin:0; color:var(--dark); }
+        .container { max-width: 1200px; margin:0 auto; padding:20px; }
 
-        .auth-wrapper { display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .auth-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); width: 100%; max-width: 420px; }
-        h2 { color: var(--primary); text-align: center; margin-bottom: 25px; }
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        .auth-wrapper { display:flex; justify-content:center; align-items:center; height:100vh; }
+        .auth-card { background:white; padding:40px; border-radius:12px; box-shadow:0 10px 15px rgba(0,0,0,0.1); width:100%; max-width:420px; }
+        h2 { color:var(--primary); text-align:center; margin-bottom:25px; }
+        .form-group { margin-bottom:18px; }
+        .form-group label { display:block; margin-bottom:6px; font-weight:600; }
+        .form-group input, .form-group select { width:100%; padding:12px; border:1px solid #ccc; border-radius:6px; box-sizing:border-box; font-size:16px; }
 
-        button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background 0.3s; }
-        button:hover { background: var(--secondary); }
-        .text-link { color: var(--secondary); cursor: pointer; text-align: center; display: block; margin-top: 12px; font-size: 14px; }
+        button { width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:6px; cursor:pointer; font-size:16px; font-weight:bold; }
+        button:hover { background:var(--secondary); }
+        .text-link { color:var(--secondary); cursor:pointer; text-align:center; display:block; margin-top:12px; font-size:14px; }
 
-        #dashboard { display: none; }
-        .navbar { background: var(--primary); color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-radius: 0 0 12px 12px; }
-        .navbar h2 { margin: 0; font-size: 1.4rem; }
-        .navbar button { width: auto; background: var(--danger); padding: 8px 20px; font-size: 15px; }
+        #dashboard { display:none; }
+        .navbar { background:var(--primary); color:white; padding:15px 25px; display:flex; justify-content:space-between; align-items:center; }
+        .grid { display:grid; grid-template-columns:260px 1fr; gap:25px; margin-top:25px; }
+        .sidebar { background:white; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.08); }
+        .sidebar ul { list-style:none; padding:0; margin:0; }
+        .sidebar li { padding:14px 18px; cursor:pointer; border-bottom:1px solid #eee; border-radius:8px; margin-bottom:4px; }
+        .sidebar li:hover, .sidebar li.active { background:var(--light); color:var(--primary); font-weight:bold; }
 
-        .grid { display: grid; grid-template-columns: 260px 1fr; gap: 25px; margin-top: 25px; }
-        .sidebar { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .sidebar ul { list-style: none; padding: 0; margin: 0; }
-        .sidebar li { padding: 14px 18px; cursor: pointer; border-bottom: 1px solid #eee; border-radius: 8px; margin-bottom: 4px; }
-        .sidebar li:hover, .sidebar li.active { background: var(--light); color: var(--primary); font-weight: bold; }
+        .main-content { background:white; padding:25px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.08); }
+        table { width:100%; border-collapse:collapse; margin-top:20px; }
+        th, td { padding:14px; border:1px solid #ddd; text-align:left; }
+        th { background:var(--primary); color:white; }
+        .hidden { display:none !important; }
 
-        .main-content { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 14px; border: 1px solid #ddd; text-align: left; }
-        th { background: var(--primary); color: white; }
-        .hidden { display: none !important; }
-
-        .btn-small { width: auto; padding: 6px 12px; font-size: 13px; }
-        .btn-danger { background: var(--danger); }
-        .demo-note { background: #f0f9ff; border: 1px solid #bae6fd; color: #0369a1; padding: 12px; border-radius: 8px; font-size: 13px; text-align: center; margin: 15px 0; }
-
-        /* Estados de expedientes y tareas */
-        .status-en-tramite { background: #fefce8; color: #854d0e; padding: 4px 10px; border-radius: 9999px; font-size: 13px; }
-        .status-finalizado { background: #ecfdf5; color: #065f46; padding: 4px 10px; border-radius: 9999px; font-size: 13px; }
-        .status-archivado { background: #f3f4f6; color: #64748b; padding: 4px 10px; border-radius: 9999px; font-size: 13px; }
+        .demo-note { background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; padding:12px; border-radius:8px; text-align:center; margin:15px 0; font-size:13px; }
+        .btn-small { width:auto; padding:6px 12px; font-size:13px; }
+        .btn-danger { background:var(--danger); }
+        .status-en-tramite { background:#fefce8; color:#854d0e; padding:4px 10px; border-radius:9999px; font-size:13px; }
+        .status-finalizado { background:#ecfdf5; color:#065f46; padding:4px 10px; border-radius:9999px; font-size:13px; }
+        .status-archivado { background:#f3f4f6; color:#64748b; padding:4px 10px; border-radius:9999px; font-size:13px; }
     </style>
 </head>
 <body>
@@ -61,8 +49,8 @@
         <h2>AME Legal CRM</h2>
         <div class="demo-note">
             <strong>Usuario de prueba (demo)</strong><br>
-            Email: <strong>demo@ame-legal.com</strong><br>
-            Contraseña: <strong>123456</strong>
+            Email: demo@ame-legal.com<br>
+            Contraseña: 123456
         </div>
         <div class="form-group"><label>Usuario / Email</label><input type="email" id="login-email" value="demo@ame-legal.com"></div>
         <div class="form-group"><label>Contraseña</label><input type="password" id="login-password" value="123456"></div>
@@ -81,7 +69,7 @@
 
     <div id="forgot-view" class="auth-card hidden">
         <h2>Recuperar Acceso</h2>
-        <p style="font-size: 13px; color: #666;">Se simulará el envío de un correo con clave provisoria.</p>
+        <p style="font-size:13px;color:#666;">Se simulará el envío de un correo con clave provisoria.</p>
         <div class="form-group"><label>Email registrado</label><input type="email" id="forgot-email"></div>
         <button onclick="resetPassword()">Enviar Correo de Recuperación</button>
         <span class="text-link" onclick="toggleView('login-view')">Volver al Login</span>
@@ -89,7 +77,7 @@
 
     <div id="force-password-view" class="auth-card hidden">
         <h2>Actualizar Contraseña</h2>
-        <p style="font-size: 14px; color: var(--danger);">Has ingresado con una clave provisoria.<br>Debes establecer una nueva.</p>
+        <p style="font-size:14px;color:var(--danger);">Has ingresado con una clave provisoria.<br>Debes establecer una nueva.</p>
         <div class="form-group"><label>Nueva Contraseña</label><input type="password" id="new-forced-password"></div>
         <button onclick="saveNewPassword()">Guardar e Ingresar</button>
     </div>
@@ -98,10 +86,7 @@
 <div id="dashboard" class="hidden">
     <div class="navbar">
         <h2>AME Legal CRM - Panel Principal</h2>
-        <div>
-            <span id="user-display" style="margin-right: 20px; font-weight: 500;"></span>
-            <button onclick="logout()">Cerrar Sesión</button>
-        </div>
+        <div><span id="user-display" style="margin-right:20px;font-weight:500;"></span><button onclick="logout()">Cerrar Sesión</button></div>
     </div>
 
     <div class="container grid">
@@ -116,90 +101,74 @@
         <div class="main-content">
             <div id="sec-clientes">
                 <h3>Nuevo Cliente</h3>
-                <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-                    <input type="text" id="cli-nombre" placeholder="Nombre completo" style="flex: 1; min-width: 220px; padding: 10px;">
-                    <input type="email" id="cli-email" placeholder="Email" style="flex: 1; min-width: 220px; padding: 10px;">
-                    <input type="text" id="cli-tel" placeholder="Teléfono" style="flex: 1; min-width: 150px; padding: 10px;">
-                    <button style="width: auto; padding: 10px 25px;" onclick="addClient()">Guardar Cliente</button>
+                <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+                    <input type="text" id="cli-nombre" placeholder="Nombre completo" style="flex:1;min-width:220px;padding:10px;">
+                    <input type="email" id="cli-email" placeholder="Email" style="flex:1;min-width:220px;padding:10px;">
+                    <input type="text" id="cli-tel" placeholder="Teléfono" style="flex:1;min-width:150px;padding:10px;">
+                    <button style="width:auto;padding:10px 25px;" onclick="addClient()">Guardar Cliente</button>
                 </div>
-                <input type="text" id="search-client" placeholder="🔎 Buscar cliente..." onkeyup="renderClients()" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:6px;">
-                <table>
-                    <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Fecha Registro</th><th>Acciones</th></tr></thead>
-                    <tbody id="client-list"></tbody>
-                </table>
+                <input type="text" id="search-client" placeholder="🔎 Buscar cliente..." onkeyup="renderClients()" style="width:100%;padding:10px;margin-bottom:15px;border:1px solid #ccc;border-radius:6px;">
+                <table><thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Fecha Registro</th><th>Acciones</th></tr></thead><tbody id="client-list"></tbody></table>
             </div>
 
             <div id="sec-casos" class="hidden">
                 <h3>Nuevo Expediente</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                    <div><label>Cliente</label><select id="caso-cliente" style="width:100%; padding:10px;"></select></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px;">
+                    <div><label>Cliente</label><select id="caso-cliente" style="width:100%;padding:10px;"></select></div>
                     <div><label>Nº de Expediente</label><input type="text" id="caso-numero" placeholder="EXP-2026-001"></div>
-                    <div><label>Descripción</label><input type="text" id="caso-desc" placeholder="Descripción breve del caso"></div>
+                    <div><label>Descripción</label><input type="text" id="caso-desc" placeholder="Descripción breve"></div>
                     <div><label>Estado</label><select id="caso-estado"><option value="En trámite">En trámite</option><option value="Finalizado">Finalizado</option><option value="Archivado">Archivado</option></select></div>
                 </div>
                 <button onclick="addCase()">Crear Expediente</button>
-                <table style="margin-top: 30px;">
-                    <thead><tr><th>Cliente</th><th>Nº Expediente</th><th>Descripción</th><th>Estado</th><th>Fecha</th></tr></thead>
-                    <tbody id="case-list"></tbody>
-                </table>
+                <table style="margin-top:30px;"><thead><tr><th>Cliente</th><th>Nº Expediente</th><th>Descripción</th><th>Estado</th><th>Fecha</th></tr></thead><tbody id="case-list"></tbody></table>
             </div>
 
             <div id="sec-tareas" class="hidden">
                 <h3>Nueva Tarea / Cita</h3>
-                <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-                    <input type="text" id="tarea-titulo" placeholder="Título de la tarea" style="flex: 2; padding: 10px;">
-                    <input type="date" id="tarea-fecha" style="flex: 1; padding: 10px;">
-                    <select id="tarea-estado" style="flex: 1; padding: 10px;">
+                <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+                    <input type="text" id="tarea-titulo" placeholder="Título de la tarea" style="flex:2;padding:10px;">
+                    <input type="date" id="tarea-fecha" style="flex:1;padding:10px;">
+                    <select id="tarea-estado" style="flex:1;padding:10px;">
                         <option value="Pendiente">Pendiente</option>
                         <option value="En progreso">En progreso</option>
                         <option value="Completada">Completada</option>
                     </select>
-                    <button style="width: auto; padding: 10px 25px;" onclick="addTask()">Agregar Tarea</button>
+                    <button style="width:auto;padding:10px 25px;" onclick="addTask()">Agregar Tarea</button>
                 </div>
-                <table>
-                    <thead><tr><th>Tarea</th><th>Vencimiento</th><th>Estado</th><th>Acciones</th></tr></thead>
-                    <tbody id="task-list"></tbody>
-                </table>
+                <table><thead><tr><th>Tarea</th><th>Vencimiento</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="task-list"></tbody></table>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Base de datos local
     if (!localStorage.getItem('users')) localStorage.setItem('users', JSON.stringify([]));
     if (!localStorage.getItem('clients')) localStorage.setItem('clients', JSON.stringify([]));
     if (!localStorage.getItem('cases')) localStorage.setItem('cases', JSON.stringify([]));
     if (!localStorage.getItem('tasks')) localStorage.setItem('tasks', JSON.stringify([]));
 
-    // Usuario demo automático
-    let users = JSON.parse(localStorage.getItem('users'));
-    if (users.length === 0) {
-        users.push({ email: "demo@ame-legal.com", password: "123456", requirePasswordChange: false });
-        localStorage.setItem('users', JSON.stringify(users));
+    let usersData = JSON.parse(localStorage.getItem('users'));
+    if (usersData.length === 0) {
+        usersData.push({ email: "demo@ame-legal.com", password: "123456", requirePasswordChange: false });
+        localStorage.setItem('users', JSON.stringify(usersData));
     }
 
     let currentUser = null;
 
     function loadSampleData() {
         if (JSON.parse(localStorage.getItem('clients')).length === 0) {
-            localStorage.setItem('clients', JSON.stringify([
-                { id: 1, nombre: "María González", email: "maria@email.com", tel: "11-5555-1234", fecha: "28/03/2026" },
-                { id: 2, nombre: "Juan Pérez", email: "juan@email.com", tel: "11-4444-5678", fecha: "29/03/2026" }
-            ]));
+            localStorage.setItem('clients', JSON.stringify([{id:1,nombre:"María González",email:"maria@email.com",tel:"11-5555-1234",fecha:"28/03/2026"},{id:2,nombre:"Juan Pérez",email:"juan@email.com",tel:"11-4444-5678",fecha:"29/03/2026"}]));
         }
         if (JSON.parse(localStorage.getItem('cases')).length === 0) {
-            localStorage.setItem('cases', JSON.stringify([
-                { id: 1, clienteId: 1, clienteNombre: "María González", numero: "EXP-2026-001", desc: "Divorcio por mutuo acuerdo", estado: "En trámite", fecha: "28/03/2026" }
-            ]));
+            localStorage.setItem('cases', JSON.stringify([{id:1,clienteId:1,clienteNombre:"María González",numero:"EXP-2026-001",desc:"Divorcio por mutuo acuerdo",estado:"En trámite",fecha:"28/03/2026"}]));
         }
         if (JSON.parse(localStorage.getItem('tasks')).length === 0) {
-            localStorage.setItem('tasks', JSON.stringify([{ id: 1, titulo: "Presentar escrito de contestación", fecha: "2026-04-05", estado: "Pendiente" }]));
+            localStorage.setItem('tasks', JSON.stringify([{id:1,titulo:"Presentar escrito de contestación",fecha:"2026-04-05",estado:"Pendiente"}]));
         }
     }
 
     function toggleView(viewId) {
-        document.querySelectorAll('.auth-card').forEach(card => card.classList.add('hidden'));
+        document.querySelectorAll('.auth-card').forEach(c => c.classList.add('hidden'));
         document.getElementById(viewId).classList.remove('hidden');
     }
 
@@ -210,49 +179,9 @@
         let user = users.find(u => u.email === email && u.password === password);
         if (user) {
             currentUser = user.email;
-            if (user.requirePasswordChange) {
-                toggleView('force-password-view');
-            } else {
-                enterDashboard();
-            }
-        } else {
-            alert("Credenciales incorrectas.");
-        }
-    }
-
-    function register() { /* igual que antes */ 
-        const email = document.getElementById('reg-email').value.trim();
-        const password = document.getElementById('reg-password').value;
-        if (!email || !password) return alert("Completa todos los campos");
-        let users = JSON.parse(localStorage.getItem('users'));
-        if (users.find(u => u.email === email)) return alert("El usuario ya existe.");
-        users.push({ email, password, requirePasswordChange: false });
-        localStorage.setItem('users', JSON.stringify(users));
-        alert("✅ Registrado con éxito.");
-        toggleView('login-view');
-    }
-
-    function resetPassword() { /* igual */ 
-        const email = document.getElementById('forgot-email').value.trim();
-        let users = JSON.parse(localStorage.getItem('users'));
-        let idx = users.findIndex(u => u.email === email);
-        if (idx === -1) return alert("El correo no está registrado.");
-        const temp = Math.random().toString(36).slice(-8);
-        users[idx].password = temp; users[idx].requirePasswordChange = true;
-        localStorage.setItem('users', JSON.stringify(users));
-        alert(`--- SIMULACIÓN DE EMAIL ---\n\nClave provisoria: ${temp}`);
-        toggleView('login-view');
-    }
-
-    function saveNewPassword() { /* igual */ 
-        const newPass = document.getElementById('new-forced-password').value;
-        if (newPass.length < 6) return alert("Mínimo 6 caracteres.");
-        let users = JSON.parse(localStorage.getItem('users'));
-        let idx = users.findIndex(u => u.email === currentUser);
-        users[idx].password = newPass; users[idx].requirePasswordChange = false;
-        localStorage.setItem('users', JSON.stringify(users));
-        alert("✅ Contraseña actualizada.");
-        enterDashboard();
+            if (user.requirePasswordChange) toggleView('force-password-view');
+            else enterDashboard();
+        } else alert("Credenciales incorrectas.");
     }
 
     function enterDashboard() {
@@ -260,10 +189,7 @@
         document.getElementById('auth-section').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         document.getElementById('user-display').innerText = `👤 ${currentUser}`;
-        
-        // ← CORRECCIÓN CLAVE: mostramos explícitamente la sección de clientes
         showSection('clientes');
-        
         renderClients();
         renderCases();
         renderTasks();
@@ -280,26 +206,24 @@
         document.querySelectorAll('.main-content > div').forEach(div => div.classList.add('hidden'));
         document.getElementById(`sec-${sec}`).classList.remove('hidden');
         document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
-        const activeLi = document.querySelector(`.sidebar li[onclick="showSection('${sec}')"]`);
-        if (activeLi) activeLi.classList.add('active');
+        const active = document.querySelector(`.sidebar li[onclick="showSection('${sec}')"]`);
+        if (active) active.classList.add('active');
         if (sec === 'casos') populateClientSelect();
     }
 
-    // ==================== CLIENTES ====================
+    // Clientes
     function addClient() {
         const nombre = document.getElementById('cli-nombre').value.trim();
-        const email = document.getElementById('cli-email').value.trim();
-        const tel = document.getElementById('cli-tel').value.trim();
         if (!nombre) return alert("El nombre es obligatorio");
         let clients = JSON.parse(localStorage.getItem('clients'));
-        clients.push({ id: Date.now(), nombre, email, tel, fecha: new Date().toLocaleDateString('es-AR') });
+        clients.push({id:Date.now(),nombre,email:document.getElementById('cli-email').value.trim(),tel:document.getElementById('cli-tel').value.trim(),fecha:new Date().toLocaleDateString('es-AR')});
         localStorage.setItem('clients', JSON.stringify(clients));
         document.getElementById('cli-nombre').value = document.getElementById('cli-email').value = document.getElementById('cli-tel').value = '';
         renderClients();
     }
 
     function deleteClient(id) {
-        if (!confirm("¿Eliminar este cliente y todos sus datos?")) return;
+        if (!confirm("¿Eliminar cliente?")) return;
         let clients = JSON.parse(localStorage.getItem('clients'));
         clients = clients.filter(c => c.id !== id);
         localStorage.setItem('clients', JSON.stringify(clients));
@@ -307,15 +231,13 @@
     }
 
     function renderClients() {
-        const filter = document.getElementById('search-client').value.toLowerCase().trim();
+        const filter = (document.getElementById('search-client') ? document.getElementById('search-client').value : '').toLowerCase().trim();
         let clients = JSON.parse(localStorage.getItem('clients'));
         const tbody = document.getElementById('client-list');
         tbody.innerHTML = '';
-        const filtered = clients.filter(c => 
-            c.nombre.toLowerCase().includes(filter) || (c.email && c.email.toLowerCase().includes(filter))
-        );
+        const filtered = clients.filter(c => c.nombre.toLowerCase().includes(filter) || (c.email && c.email.toLowerCase().includes(filter)));
         if (filtered.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#888;">No se encontraron clientes</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#888;">No se encontraron clientes</td></tr>`;
             return;
         }
         filtered.forEach(c => {
@@ -325,7 +247,7 @@
         });
     }
 
-    // ==================== EXPEDIENTES ====================
+    // Expedientes
     function populateClientSelect() {
         const select = document.getElementById('caso-cliente');
         const clients = JSON.parse(localStorage.getItem('clients'));
@@ -340,15 +262,13 @@
     function addCase() {
         const clienteId = parseInt(document.getElementById('caso-cliente').value);
         const numero = document.getElementById('caso-numero').value.trim();
-        const desc = document.getElementById('caso-desc').value.trim();
-        const estado = document.getElementById('caso-estado').value;
         if (!clienteId || !numero) return alert("Cliente y Nº de expediente son obligatorios");
         const clients = JSON.parse(localStorage.getItem('clients'));
         const cliente = clients.find(c => c.id === clienteId);
         let cases = JSON.parse(localStorage.getItem('cases'));
-        cases.push({ id: Date.now(), clienteId, clienteNombre: cliente.nombre, numero, desc, estado, fecha: new Date().toLocaleDateString('es-AR') });
+        cases.push({id:Date.now(),clienteId,clienteNombre:cliente.nombre,numero,desc:document.getElementById('caso-desc').value.trim(),estado:document.getElementById('caso-estado').value,fecha:new Date().toLocaleDateString('es-AR')});
         localStorage.setItem('cases', JSON.stringify(cases));
-        document.getElementById('caso-numero').value = ''; document.getElementById('caso-desc').value = '';
+        document.getElementById('caso-numero').value = document.getElementById('caso-desc').value = '';
         renderCases();
         alert("✅ Expediente creado");
     }
@@ -356,22 +276,21 @@
     function renderCases() {
         const cases = JSON.parse(localStorage.getItem('cases'));
         const tbody = document.getElementById('case-list');
-        tbody.innerHTML = cases.length === 0 ? `<tr><td colspan="5" style="text-align:center; color:#888;">Aún no hay expedientes</td></tr>` : '';
+        tbody.innerHTML = cases.length === 0 ? `<tr><td colspan="5" style="text-align:center;color:#888;">Aún no hay expedientes</td></tr>` : '';
         cases.forEach(c => {
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${c.clienteNombre}</td><td>${c.numero}</td><td>${c.desc}</td><td><span class="status-${c.estado.toLowerCase().replace(' ', '-')}">${c.estado}</span></td><td>${c.fecha}</td>`;
+            tr.innerHTML = `<td>${c.clienteNombre}</td><td>${c.numero}</td><td>${c.desc}</td><td><span class="status-${c.estado.toLowerCase().replace(' ','-')}">${c.estado}</span></td><td>${c.fecha}</td>`;
             tbody.appendChild(tr);
         });
     }
 
-    // ==================== TAREAS ====================
+    // Tareas
     function addTask() {
         const titulo = document.getElementById('tarea-titulo').value.trim();
         const fecha = document.getElementById('tarea-fecha').value;
-        const estado = document.getElementById('tarea-estado').value;
         if (!titulo || !fecha) return alert("Título y fecha son obligatorios");
         let tasks = JSON.parse(localStorage.getItem('tasks'));
-        tasks.push({ id: Date.now(), titulo, fecha, estado });
+        tasks.push({id:Date.now(),titulo,fecha,estado:document.getElementById('tarea-estado').value});
         localStorage.setItem('tasks', JSON.stringify(tasks));
         document.getElementById('tarea-titulo').value = '';
         renderTasks();
@@ -388,10 +307,10 @@
     function renderTasks() {
         const tasks = JSON.parse(localStorage.getItem('tasks'));
         const tbody = document.getElementById('task-list');
-        tbody.innerHTML = tasks.length === 0 ? `<tr><td colspan="4" style="text-align:center; color:#888;">Aún no hay tareas</td></tr>` : '';
+        tbody.innerHTML = tasks.length === 0 ? `<tr><td colspan="4" style="text-align:center;color:#888;">Aún no hay tareas</td></tr>` : '';
         tasks.forEach(t => {
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${t.titulo}</td><td>${t.fecha}</td><td><span style="padding:4px 10px; border-radius:9999px; background:${t.estado==='Completada'?'#ecfdf5':'#fefce8'}; color:${t.estado==='Completada'?'#065f46':'#854d0e'};">${t.estado}</span></td><td><button class="btn-small" onclick="toggleTaskStatus(${t.id})">${t.estado==='Completada'?'↩️ Reabrir':'✅ Completar'}</button></td>`;
+            tr.innerHTML = `<td>${t.titulo}</td><td>${t.fecha}</td><td><span style="padding:4px 10px;border-radius:9999px;background:${t.estado==='Completada'?'#ecfdf5':'#fefce8'};color:${t.estado==='Completada'?'#065f46':'#854d0e'};">${t.estado}</span></td><td><button class="btn-small" onclick="toggleTaskStatus(${t.id})">${t.estado==='Completada'?'↩️ Reabrir':'✅ Completar'}</button></td>`;
             tbody.appendChild(tr);
         });
     }
@@ -400,6 +319,8 @@
     document.addEventListener('keypress', e => {
         if (e.key === 'Enter' && document.getElementById('login-view').offsetParent !== null) login();
     });
+
+    console.log("✅ AME Legal CRM cargado correctamente");
 </script>
 </body>
 </html>
