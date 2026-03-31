@@ -23,11 +23,7 @@
         .form-group label { display: block; margin-bottom: 6px; font-weight: 600; }
         .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
 
-        button {
-            width: 100%; padding: 12px; background: var(--primary); color: white;
-            border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold;
-            transition: background 0.3s;
-        }
+        button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background 0.3s; }
         button:hover { background: var(--secondary); }
         .text-link { color: var(--secondary); cursor: pointer; text-align: center; display: block; margin-top: 12px; font-size: 14px; }
 
@@ -51,6 +47,11 @@
         .btn-small { width: auto; padding: 6px 12px; font-size: 13px; }
         .btn-danger { background: var(--danger); }
         .demo-note { background: #f0f9ff; border: 1px solid #bae6fd; color: #0369a1; padding: 12px; border-radius: 8px; font-size: 13px; text-align: center; margin: 15px 0; }
+
+        /* Estados de expedientes y tareas */
+        .status-en-tramite { background: #fefce8; color: #854d0e; padding: 4px 10px; border-radius: 9999px; font-size: 13px; }
+        .status-finalizado { background: #ecfdf5; color: #065f46; padding: 4px 10px; border-radius: 9999px; font-size: 13px; }
+        .status-archivado { background: #f3f4f6; color: #64748b; padding: 4px 10px; border-radius: 9999px; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -58,22 +59,18 @@
 <div id="auth-section" class="auth-wrapper">
     <div id="login-view" class="auth-card">
         <h2>AME Legal CRM</h2>
-        
         <div class="demo-note">
             <strong>Usuario de prueba (demo)</strong><br>
             Email: <strong>demo@ame-legal.com</strong><br>
             Contraseña: <strong>123456</strong>
         </div>
-
-        <div class="form-group"><label>Usuario / Email</label><input type="email" id="login-email" placeholder="demo@ame-legal.com" value="demo@ame-legal.com"></div>
-        <div class="form-group"><label>Contraseña</label><input type="password" id="login-password" placeholder="********" value="123456"></div>
-        
+        <div class="form-group"><label>Usuario / Email</label><input type="email" id="login-email" value="demo@ame-legal.com"></div>
+        <div class="form-group"><label>Contraseña</label><input type="password" id="login-password" value="123456"></div>
         <button onclick="login()">Ingresar</button>
         <span class="text-link" onclick="toggleView('forgot-view')">¿Olvidaste tu contraseña?</span>
         <span class="text-link" onclick="toggleView('register-view')">Registrar nueva cuenta</span>
     </div>
 
-    <!-- Resto de vistas (registro, forgot, force password) sin cambios -->
     <div id="register-view" class="auth-card hidden">
         <h2>Registro de Usuario</h2>
         <div class="form-group"><label>Email</label><input type="email" id="reg-email"></div>
@@ -117,7 +114,6 @@
         </div>
 
         <div class="main-content">
-            <!-- (El resto del dashboard es exactamente el mismo que en la versión anterior) -->
             <div id="sec-clientes">
                 <h3>Nuevo Cliente</h3>
                 <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
@@ -126,7 +122,7 @@
                     <input type="text" id="cli-tel" placeholder="Teléfono" style="flex: 1; min-width: 150px; padding: 10px;">
                     <button style="width: auto; padding: 10px 25px;" onclick="addClient()">Guardar Cliente</button>
                 </div>
-                <input type="text" id="search-client" class="search-input" placeholder="🔎 Buscar cliente..." onkeyup="renderClients()">
+                <input type="text" id="search-client" placeholder="🔎 Buscar cliente..." onkeyup="renderClients()" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:6px;">
                 <table>
                     <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Fecha Registro</th><th>Acciones</th></tr></thead>
                     <tbody id="client-list"></tbody>
@@ -170,27 +166,22 @@
 </div>
 
 <script>
-    // ==================== INICIALIZACIÓN ====================
+    // Base de datos local
     if (!localStorage.getItem('users')) localStorage.setItem('users', JSON.stringify([]));
     if (!localStorage.getItem('clients')) localStorage.setItem('clients', JSON.stringify([]));
     if (!localStorage.getItem('cases')) localStorage.setItem('cases', JSON.stringify([]));
     if (!localStorage.getItem('tasks')) localStorage.setItem('tasks', JSON.stringify([]));
 
-    // === USUARIO DEMO AUTOMÁTICO (esto soluciona tu problema) ===
+    // Usuario demo automático
     let users = JSON.parse(localStorage.getItem('users'));
     if (users.length === 0) {
-        users.push({
-            email: "demo@ame-legal.com",
-            password: "123456",
-            requirePasswordChange: false
-        });
+        users.push({ email: "demo@ame-legal.com", password: "123456", requirePasswordChange: false });
         localStorage.setItem('users', JSON.stringify(users));
     }
 
     let currentUser = null;
 
     function loadSampleData() {
-        // (mismo código de datos de ejemplo que antes)
         if (JSON.parse(localStorage.getItem('clients')).length === 0) {
             localStorage.setItem('clients', JSON.stringify([
                 { id: 1, nombre: "María González", email: "maria@email.com", tel: "11-5555-1234", fecha: "28/03/2026" },
@@ -203,13 +194,10 @@
             ]));
         }
         if (JSON.parse(localStorage.getItem('tasks')).length === 0) {
-            localStorage.setItem('tasks', JSON.stringify([
-                { id: 1, titulo: "Presentar escrito de contestación", fecha: "2026-04-05", estado: "Pendiente" }
-            ]));
+            localStorage.setItem('tasks', JSON.stringify([{ id: 1, titulo: "Presentar escrito de contestación", fecha: "2026-04-05", estado: "Pendiente" }]));
         }
     }
 
-    // ==================== FUNCIONES (sin cambios importantes) ====================
     function toggleView(viewId) {
         document.querySelectorAll('.auth-card').forEach(card => card.classList.add('hidden'));
         document.getElementById(viewId).classList.remove('hidden');
@@ -222,14 +210,17 @@
         let user = users.find(u => u.email === email && u.password === password);
         if (user) {
             currentUser = user.email;
-            if (user.requirePasswordChange) toggleView('force-password-view');
-            else enterDashboard();
+            if (user.requirePasswordChange) {
+                toggleView('force-password-view');
+            } else {
+                enterDashboard();
+            }
         } else {
             alert("Credenciales incorrectas.");
         }
     }
 
-    function register() {
+    function register() { /* igual que antes */ 
         const email = document.getElementById('reg-email').value.trim();
         const password = document.getElementById('reg-password').value;
         if (!email || !password) return alert("Completa todos los campos");
@@ -241,26 +232,24 @@
         toggleView('login-view');
     }
 
-    function resetPassword() { /* igual que antes */ 
+    function resetPassword() { /* igual */ 
         const email = document.getElementById('forgot-email').value.trim();
         let users = JSON.parse(localStorage.getItem('users'));
         let idx = users.findIndex(u => u.email === email);
         if (idx === -1) return alert("El correo no está registrado.");
         const temp = Math.random().toString(36).slice(-8);
-        users[idx].password = temp;
-        users[idx].requirePasswordChange = true;
+        users[idx].password = temp; users[idx].requirePasswordChange = true;
         localStorage.setItem('users', JSON.stringify(users));
-        alert(`--- SIMULACIÓN DE EMAIL ---\n\nDe: sistema@ame-legal.com\nPara: ${email}\n\nClave provisoria: ${temp}`);
+        alert(`--- SIMULACIÓN DE EMAIL ---\n\nClave provisoria: ${temp}`);
         toggleView('login-view');
     }
 
-    function saveNewPassword() { /* igual que antes */ 
+    function saveNewPassword() { /* igual */ 
         const newPass = document.getElementById('new-forced-password').value;
         if (newPass.length < 6) return alert("Mínimo 6 caracteres.");
         let users = JSON.parse(localStorage.getItem('users'));
         let idx = users.findIndex(u => u.email === currentUser);
-        users[idx].password = newPass;
-        users[idx].requirePasswordChange = false;
+        users[idx].password = newPass; users[idx].requirePasswordChange = false;
         localStorage.setItem('users', JSON.stringify(users));
         alert("✅ Contraseña actualizada.");
         enterDashboard();
@@ -271,26 +260,33 @@
         document.getElementById('auth-section').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         document.getElementById('user-display').innerText = `👤 ${currentUser}`;
-        renderClients(); renderCases(); renderTasks();
+        
+        // ← CORRECCIÓN CLAVE: mostramos explícitamente la sección de clientes
+        showSection('clientes');
+        
+        renderClients();
+        renderCases();
+        renderTasks();
     }
 
-    function logout() { /* igual */ 
+    function logout() {
         currentUser = null;
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('auth-section').classList.remove('hidden');
         toggleView('login-view');
     }
 
-    function showSection(sec) { /* igual */ 
+    function showSection(sec) {
         document.querySelectorAll('.main-content > div').forEach(div => div.classList.add('hidden'));
         document.getElementById(`sec-${sec}`).classList.remove('hidden');
         document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
-        document.querySelector(`.sidebar li[onclick="showSection('${sec}')"]`).classList.add('active');
+        const activeLi = document.querySelector(`.sidebar li[onclick="showSection('${sec}')"]`);
+        if (activeLi) activeLi.classList.add('active');
         if (sec === 'casos') populateClientSelect();
     }
 
-    // ==================== CLIENTES, CASOS, TAREAS (igual que la versión anterior) ====================
-    function addClient() { /* mismo código */ 
+    // ==================== CLIENTES ====================
+    function addClient() {
         const nombre = document.getElementById('cli-nombre').value.trim();
         const email = document.getElementById('cli-email').value.trim();
         const tel = document.getElementById('cli-tel').value.trim();
@@ -302,20 +298,22 @@
         renderClients();
     }
 
-    function deleteClient(id) { /* mismo */ 
-        if (!confirm("¿Eliminar este cliente?")) return;
+    function deleteClient(id) {
+        if (!confirm("¿Eliminar este cliente y todos sus datos?")) return;
         let clients = JSON.parse(localStorage.getItem('clients'));
         clients = clients.filter(c => c.id !== id);
         localStorage.setItem('clients', JSON.stringify(clients));
         renderClients();
     }
 
-    function renderClients() { /* mismo con búsqueda */ 
+    function renderClients() {
         const filter = document.getElementById('search-client').value.toLowerCase().trim();
         let clients = JSON.parse(localStorage.getItem('clients'));
         const tbody = document.getElementById('client-list');
         tbody.innerHTML = '';
-        const filtered = clients.filter(c => c.nombre.toLowerCase().includes(filter) || (c.email && c.email.toLowerCase().includes(filter)));
+        const filtered = clients.filter(c => 
+            c.nombre.toLowerCase().includes(filter) || (c.email && c.email.toLowerCase().includes(filter))
+        );
         if (filtered.length === 0) {
             tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#888;">No se encontraron clientes</td></tr>`;
             return;
@@ -327,7 +325,8 @@
         });
     }
 
-    function populateClientSelect() { /* mismo */ 
+    // ==================== EXPEDIENTES ====================
+    function populateClientSelect() {
         const select = document.getElementById('caso-cliente');
         const clients = JSON.parse(localStorage.getItem('clients'));
         select.innerHTML = '<option value="">Selecciona un cliente...</option>';
@@ -338,7 +337,7 @@
         });
     }
 
-    function addCase() { /* mismo */ 
+    function addCase() {
         const clienteId = parseInt(document.getElementById('caso-cliente').value);
         const numero = document.getElementById('caso-numero').value.trim();
         const desc = document.getElementById('caso-desc').value.trim();
@@ -354,7 +353,7 @@
         alert("✅ Expediente creado");
     }
 
-    function renderCases() { /* mismo */ 
+    function renderCases() {
         const cases = JSON.parse(localStorage.getItem('cases'));
         const tbody = document.getElementById('case-list');
         tbody.innerHTML = cases.length === 0 ? `<tr><td colspan="5" style="text-align:center; color:#888;">Aún no hay expedientes</td></tr>` : '';
@@ -365,7 +364,8 @@
         });
     }
 
-    function addTask() { /* mismo */ 
+    // ==================== TAREAS ====================
+    function addTask() {
         const titulo = document.getElementById('tarea-titulo').value.trim();
         const fecha = document.getElementById('tarea-fecha').value;
         const estado = document.getElementById('tarea-estado').value;
@@ -377,7 +377,7 @@
         renderTasks();
     }
 
-    function toggleTaskStatus(id) { /* mismo */ 
+    function toggleTaskStatus(id) {
         let tasks = JSON.parse(localStorage.getItem('tasks'));
         const task = tasks.find(t => t.id === id);
         task.estado = task.estado === 'Completada' ? 'Pendiente' : 'Completada';
@@ -385,7 +385,7 @@
         renderTasks();
     }
 
-    function renderTasks() { /* mismo */ 
+    function renderTasks() {
         const tasks = JSON.parse(localStorage.getItem('tasks'));
         const tbody = document.getElementById('task-list');
         tbody.innerHTML = tasks.length === 0 ? `<tr><td colspan="4" style="text-align:center; color:#888;">Aún no hay tareas</td></tr>` : '';
